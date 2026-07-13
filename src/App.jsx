@@ -13,6 +13,8 @@ import Mobile from './Pages/Mobile';
 import { CartProvider } from './Context/CartContext'; 
 import { AuthProvider } from './Context/AuthContext'; 
 import Category from './Pages/Category'
+import OrderSuccess from './Pages/OrderSuccess';
+import TrackOrder from './Pages/TrackOrder';
 
 
 function App() {
@@ -51,6 +53,8 @@ function App() {
                 <Route path="/appliances" element={<Category title="Home Appliances" />} />
                 <Route path="/computing" element={<Category title="Computing" />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/success/:orderId" element={<OrderSuccess />} />
+                <Route path="/track" element={<TrackOrder />} />
               </Routes>
             </main>
             <Footer />

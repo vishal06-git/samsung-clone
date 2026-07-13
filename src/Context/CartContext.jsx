@@ -1,11 +1,12 @@
 import React, { createContext, useState, useContext } from 'react';
-import toast from 'react-hot-toast'; // <-- 1. Import toast
+import toast from 'react-hot-toast';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [CartItems, setCartItems] = useState([]);
 
+  // 1. Add To Cart Function (Pehle se tha)
   const AddToCart = (Product) => {
     setCartItems((PrevItems) => {
       const ExistingItem = PrevItems.find(item => item.Id === Product.Id);
@@ -17,12 +18,24 @@ export const CartProvider = ({ children }) => {
       return [...PrevItems, { ...Product, Quantity: 1 }];
     });
     
-    // 2. Replace alert with a beautiful toast
     toast.success(`${Product.Name} added to cart!`); 
   };
 
+  // 2. NAYA: Remove From Cart Function
+  const RemoveFromCart = (productId) => {
+    // Jo id match nahi karegi, sirf wahi items bachenge (yaani selected item delete ho jayega)
+    setCartItems((PrevItems) => PrevItems.filter(item => item.Id !== productId));
+    toast.success("Item removed from cart!");
+  };
+
+  // 3. NAYA: Clear Cart Function (Checkout ke time use hoga)
+  const ClearCart = () => {
+    setCartItems([]); // Pura cart array khali kar diya
+  };
+
   return (
-    <CartContext.Provider value={{ CartItems, AddToCart }}>
+    // DHYAN DO: Yahan value={...} me humne naye functions bhi daal diye hain
+    <CartContext.Provider value={{ CartItems, AddToCart, RemoveFromCart, ClearCart }}>
       {children}
     </CartContext.Provider>
   );
