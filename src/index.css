@@ -1,5 +1,10 @@
+/* Tailwind V4 Import */
 @import "tailwindcss";
 
+/* NAYA: Ye line Tailwind ko batayegi ki dark mode 'class' se (Moon button) chalana hai */
+@custom-variant dark (&:is(.dark *));
+
+/* Tumhari animations (waise hi rakhi hain) */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -13,4 +18,10 @@
 
 .animate-fade-in-up {
   animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Fallback: Agar Tailwind delay kare toh ye CSS turant background dark kar degi */
+html.dark body {
+  background-color: #0f0f0f;
+  color: #ffffff;
 }
