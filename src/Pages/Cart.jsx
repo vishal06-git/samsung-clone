@@ -1,142 +1,154 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Tag } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
-import { Trash2, ArrowRight, Minus, Plus } from 'lucide-react';
 
 const Cart = () => {
-  const { CartItems, RemoveFromCart, UpdateQuantity, ClearCart } = useCart();
-  const navigate = useNavigate();
+  const { CartItems, RemoveFromCart, UpdateQuantity } = useCart();
+  
+  // Promo Code State
+  const [promoCode, setPromoCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [promoError, setPromoError] = useState('');
 
-  // NAYA FIX: Subtotal me quantity multiply ki taaki total amount sahi aaye
-  const subtotal = CartItems?.reduce((total, item) => total + (item.Price * item.Quantity), 0) || 0;
-  const shipping = subtotal > 0 ? 0 : 0; 
-  const total = subtotal + shipping;
+  // Calculations
+  const subtotal = CartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.18; // 18% GST (Fake calculation for UI)
+  const shipping = subtotal > 50000 ? 0 : 500; // Free shipping over ₹50,000
+  const discountAmount = subtotal * (discount / 100);
+  const grandTotal = subtotal + tax + shipping - discountAmount;
 
-  const handleCheckout = () => {
-    const orderId = "SAM" + Math.floor(Math.random() * 1000000);
-    
-    const orderData = {
-      orderId: orderId,
-      items: CartItems,
-      total: total,
-      date: new Date().toLocaleDateString(),
-      status: "Processing"
-    };
-
-    const existingOrders = JSON.parse(localStorage.getItem('samsung_orders')) || [];
-    localStorage.setItem('samsung_orders', JSON.stringify([...existingOrders, orderData]));
-
-    if(ClearCart) ClearCart();
-    navigate(`/success/${orderId}`);
+  // Promo Code Handler
+  const handleApplyPromo = () => {
+    if (promoCode.toUpperCase() === 'SAMSUNG20') {
+      setDiscount(20);
+      setPromoError('');
+    } else {
+      setDiscount(0);
+      setPromoError('Invalid Promo Code');
+    }
   };
 
-  if (!CartItems || CartItems.length === 0) {
+  // ---------------- EMPTY CART UI ----------------
+  if (CartItems.length === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 pt-20 bg-white dark:bg-[#0f0f0f] text-black dark:text-white transition-colors duration-300">
-        <div className="w-28 h-28 bg-[#f4f4f4] dark:bg-[#1a1a1a] rounded-full flex items-center justify-center mb-8 shadow-inner">
-          <svg className="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
+      <div className="w-full min-h-screen bg-white dark:bg-[#0f0f0f] text-black dark:text-white pt-32 pb-16 flex flex-col items-center justify-center transition-colors duration-300">
+        <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6">
+          <ShoppingBag className="w-12 h-12 text-gray-400" />
         </div>
-        <h2 className="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">Your cart is empty</h2>
-        <p className="text-gray-500 dark:text-gray-400 mb-10 text-center max-w-md text-lg">Looks like you haven't added any Galaxy devices to your cart yet.</p>
-        <Link to="/" className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg">
-          Continue Shopping
+        <h2 className="text-3xl font-black mb-4">Your cart is empty</h2>
+        <p className="text-gray-500 mb-8 font-medium">Looks like you haven't added anything to your cart yet.</p>
+        <Link to="/" className="bg-black dark:bg-white text-white dark:text-black px-8 py-3.5 rounded-full font-bold hover:scale-105 transition-transform duration-300">
+          Start Shopping
         </Link>
       </div>
     );
   }
 
+  // ---------------- FILLED CART UI ----------------
   return (
-    <div className="w-full bg-white dark:bg-[#0f0f0f] text-black dark:text-white transition-colors duration-300 pt-24 pb-16 min-h-screen">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
-        
-        <h1 className="text-4xl md:text-5xl font-black mb-12 tracking-tight">Your Cart</h1>
-        
-        <div className="flex flex-col lg:flex-row gap-12">
+    <div className="w-full min-h-screen bg-gray-50 dark:bg-[#0f0f0f] text-black dark:text-white transition-colors duration-300 pt-28 pb-16">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+        <h1 className="text-3xl md:text-4xl font-black mb-10 tracking-tight">Shopping Cart</h1>
+
+        <div className="flex flex-col lg:flex-row gap-10">
           
-          {/* Left Side: Cart Items */}
+          {/* LEFT SIDE: CART ITEMS LIST */}
           <div className="w-full lg:w-2/3 flex flex-col gap-6">
             {CartItems.map((item, index) => (
-              // NAYA: Dark mode border aur background
-              <div key={index} className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
+              <div key={index} className="flex flex-col sm:flex-row items-center bg-white dark:bg-[#1a1a1a] p-4 md:p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 gap-6">
                 
-                <div className="w-32 h-32 bg-[#f4f4f4] dark:bg-[#1a1a1a] rounded-2xl p-3 flex-shrink-0 flex items-center justify-center">
-                  <img src={item.ImageUrl || item.images?.[0]} alt={item.Name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
-                </div>
-                
-                <div className="flex-grow flex flex-col items-center sm:items-start w-full text-center sm:text-left">
-                  <h3 className="text-xl font-bold mb-1">{item.Name}</h3>
-                  {/* NAYA: Sahi color uthaya Context se */}
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
-                    Color: {item.selectedColor || (item.colors ? item.colors[0] : 'Standard')}
-                  </p>
-                  <div className="text-xl font-bold">₹{item.Price.toLocaleString('en-IN')}</div>
+                {/* Product Image */}
+                <Link to={`/product/${item.Id}`} className="w-32 h-32 bg-[#f4f4f4] dark:bg-black rounded-2xl p-4 flex-shrink-0">
+                  <img src={item.ImageUrl} alt={item.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                </Link>
+
+                {/* Product Info */}
+                <div className="flex flex-col flex-grow text-center sm:text-left">
+                  <h3 className="font-bold text-lg md:text-xl line-clamp-1">{item.name}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-3">Color: <span className="font-medium text-black dark:text-gray-300">{item.selectedColor}</span></p>
+                  <p className="font-bold text-xl">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
                 </div>
 
-                {/* NAYA: Quantity Controls (+ / -) */}
-                <div className="flex items-center gap-4 mt-4 sm:mt-0">
-                  <div className="flex items-center bg-[#f4f4f4] dark:bg-[#1a1a1a] rounded-full p-1">
-                    <button 
-                      onClick={() => UpdateQuantity(item.Id, item.selectedColor, item.Quantity - 1)}
-                      className="p-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors"
-                      disabled={item.Quantity <= 1}
-                    >
+                {/* Controls (Quantity & Delete) */}
+                <div className="flex sm:flex-col items-center justify-between sm:justify-center gap-4 w-full sm:w-auto mt-4 sm:mt-0">
+                  <div className="flex items-center gap-4 bg-gray-100 dark:bg-[#2a2a2a] rounded-full px-2 py-1">
+                    <button onClick={() => UpdateQuantity(item.Id, item.selectedColor, -1)} className="p-2 hover:bg-white dark:hover:bg-black rounded-full transition-colors">
                       <Minus className="w-4 h-4" />
                     </button>
-                    <span className="w-8 text-center font-bold text-sm">{item.Quantity}</span>
-                    <button 
-                      onClick={() => UpdateQuantity(item.Id, item.selectedColor, item.Quantity + 1)}
-                      className="p-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors"
-                    >
+                    <span className="font-bold text-sm w-4 text-center">{item.quantity}</span>
+                    <button onClick={() => UpdateQuantity(item.Id, item.selectedColor, 1)} className="p-2 hover:bg-white dark:hover:bg-black rounded-full transition-colors">
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
                   
-                  {/* Delete Button */}
-                  <button 
-                    onClick={() => RemoveFromCart(item.Id, item.selectedColor)} 
-                    className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors ml-2"
-                    title="Remove item"
-                  >
+                  <button onClick={() => RemoveFromCart(item.Id, item.selectedColor)} className="p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-colors">
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
-                
+
               </div>
             ))}
           </div>
 
-          {/* Right Side: Order Summary */}
+          {/* RIGHT SIDE: ORDER SUMMARY */}
           <div className="w-full lg:w-1/3">
-            {/* NAYA: Dark mode sticky box */}
-            <div className="bg-[#f4f4f4] dark:bg-[#151515] p-8 rounded-3xl sticky top-28 border border-transparent dark:border-gray-800">
-              <h2 className="text-2xl font-bold mb-8">Order Summary</h2>
+            <div className="bg-white dark:bg-[#1a1a1a] p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 sticky top-28">
+              <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
               
-              <div className="flex justify-between mb-4 text-gray-600 dark:text-gray-400">
-                <span>Subtotal ({CartItems.reduce((acc, item) => acc + item.Quantity, 0)} items)</span>
-                <span className="font-medium text-black dark:text-white">₹{subtotal.toLocaleString('en-IN')}</span>
+              {/* Promo Code Box */}
+              <div className="mb-8">
+                <div className="flex gap-2">
+                  <div className="relative flex-grow">
+                    <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input 
+                      type="text" 
+                      placeholder="Promo Code (Try SAMSUNG20)" 
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="w-full bg-gray-100 dark:bg-[#2a2a2a] text-black dark:text-white px-10 py-3 rounded-full text-sm font-medium outline-none border border-transparent focus:border-black dark:focus:border-white transition-colors"
+                    />
+                  </div>
+                  <button onClick={handleApplyPromo} className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full text-sm font-bold hover:scale-105 transition-transform">
+                    Apply
+                  </button>
+                </div>
+                {promoError && <p className="text-red-500 text-xs mt-2 ml-4 font-medium">{promoError}</p>}
+                {discount > 0 && <p className="text-green-500 text-xs mt-2 ml-4 font-bold">20% Discount Applied!</p>}
               </div>
-              
-              <div className="flex justify-between mb-6 text-gray-600 dark:text-gray-400">
-                <span>Shipping</span>
-                <span className="font-medium text-green-600 dark:text-green-400">Free</span>
+
+              {/* Price Breakdown */}
+              <div className="flex flex-col gap-4 text-sm font-medium text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-6 mb-6">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span className="text-black dark:text-white font-bold">₹{subtotal.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Estimated Tax (18%)</span>
+                  <span className="text-black dark:text-white font-bold">₹{tax.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span className="text-black dark:text-white font-bold">
+                    {shipping === 0 ? <span className="text-green-500">Free</span> : `₹${shipping}`}
+                  </span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-green-500">
+                    <span>Discount (20%)</span>
+                    <span className="font-bold">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
               </div>
-              
-              <div className="w-full h-px bg-gray-300 dark:bg-gray-700 mb-6"></div>
-              
-              <div className="flex justify-between mb-8 text-2xl font-black">
-                <span>Total</span>
-                <span>₹{total.toLocaleString('en-IN')}</span>
+
+              <div className="flex justify-between items-center mb-8">
+                <span className="text-lg font-bold">Grand Total</span>
+                <span className="text-2xl md:text-3xl font-black">₹{grandTotal.toLocaleString('en-IN')}</span>
               </div>
-              
-              <button 
-                onClick={handleCheckout} 
-                className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-full font-bold text-lg hover:scale-[1.02] transition-transform duration-300 flex justify-center items-center gap-3 group shadow-lg"
-              >
-                Checkout Now
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+
+              <Link to="/checkout" className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-full font-bold text-lg hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center gap-2 shadow-xl">
+                Proceed to Checkout <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           </div>
 

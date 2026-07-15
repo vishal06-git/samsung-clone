@@ -1,74 +1,53 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import React, { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext();
 
+export const useCart = () => useContext(CartContext);
+
 export const CartProvider = ({ children }) => {
-  // NAYA: Lazy initialization - Page load hone par pehle localStorage se cart history uthayega
-  const [CartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem('samsung_cart_items');
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const [CartItems, setCartItems] = useState([]);
 
-  // NAYA: Jab bhi CartItems state change hogi, ye automatically localStorage me save kar dega
-  useEffect(() => {
-    localStorage.setItem('samsung_cart_items', JSON.stringify(CartItems));
-  }, [CartItems]);
-
-  // 1. Add To Cart Function
-  const AddToCart = (Product, selectedColor = "Default") => {
-    setCartItems((PrevItems) => {
-      // NAYA: ID aur Color dono match karna zaroori hai (taaki same phone alag color me add ho sake)
-      const ExistingItem = PrevItems.find(item => item.Id === Product.Id && item.selectedColor === selectedColor);
+  // 1. Add To Cart
+  const AddToCart = (product, selectedColor) => {
+    setCartItems(prev => {
+      const existingItem = prev.find(item => item.Id === product.Id && item.selectedColor === selectedColor);
       
-      if (ExistingItem) {
-        return PrevItems.map(item => 
-          (item.Id === Product.Id && item.selectedColor === selectedColor) 
-            ? { ...item, Quantity: item.Quantity + 1 } 
+      if (existingItem) {
+        return prev.map(item => 
+          (item.Id === product.Id && item.selectedColor === selectedColor) 
+            ? { ...item, quantity: item.quantity + 1 } 
             : item
         );
       }
-      // NAYA: Product object me selectedColor bhi attach kar diya
-      return [...PrevItems, { ...Product, Quantity: 1, selectedColor }];
+      return [...prev, { ...product, selectedColor, quantity: 1 }];
     });
-    
-    toast.success(`${Product.Name} added to cart!`); 
   };
 
-  // 2. Remove From Cart Function
-  const RemoveFromCart = (productId, selectedColor) => {
-    setCartItems((PrevItems) => 
-      PrevItems.filter(item => !(item.Id === productId && item.selectedColor === selectedColor))
-    );
-    toast.success("Item removed from cart!");
+  // 2. Remove Item
+  const RemoveFromCart = (id, color) => {
+    setCartItems(prev => prev.filter(item => !(item.Id === id && item.selectedColor === color)));
   };
 
-  // 3. NAYA: Update Quantity Function (Cart page me + aur - buttons ke liye)
-  const UpdateQuantity = (productId, selectedColor, newQuantity) => {
-    if (newQuantity < 1) return; // Quantity 1 se kam nahi ho sakti
-    
-    setCartItems((PrevItems) => 
-      PrevItems.map(item => 
-        (item.Id === productId && item.selectedColor === selectedColor)
-          ? { ...item, Quantity: newQuantity } 
-          : item
-      )
-    );
+  // 3. Update Quantity
+  const UpdateQuantity = (id, color, amount) => {
+    setCartItems(prev => prev.map(item => {
+      if (item.Id === id && item.selectedColor === color) {
+        const newQuantity = item.quantity + amount;
+        return { ...item, quantity: newQuantity > 0 ? newQuantity : 1 };
+      }
+      return item;
+    }));
   };
 
-  // 4. Clear Cart Function (Checkout successful hone ke baad)
+  // 4. Clear Cart (Checkout ke baad empty karne ke liye)
   const ClearCart = () => {
     setCartItems([]);
-    localStorage.removeItem('samsung_cart_items'); // Storage se bhi clean kar diya
   };
 
+  // RETURN hamesha saare functions declare hone ke baad, sabse last mein aana chahiye
   return (
     <CartContext.Provider value={{ CartItems, AddToCart, RemoveFromCart, UpdateQuantity, ClearCart }}>
       {children}
     </CartContext.Provider>
   );
-};
-
-export const useCart = () => {
-  return useContext(CartContext);
 };
