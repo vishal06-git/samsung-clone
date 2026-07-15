@@ -4,15 +4,8 @@ import { Link } from 'react-router-dom';
 // NAYA: Apna premium ProductGrid yahan import kar liya
 import ProductGrid from '../Components/Products/ProductGrid'; 
 
-// Apni saari 8 downloaded videos yahan import ki hain
-import video1 from '../../src/assets/s26.webm';
-import video2 from '../../src/assets/s26-2.webm';
-import video3 from '../../src/assets/s26-3.webm';
-import video4 from '../../src/assets/s26-4.webm';
-import video5 from '../../src/assets/s26-5.webm';
-import video6 from '../../src/assets/s26-6.webm';
-import video7 from '../../src/assets/s26-7.webm';
-import video8 from '../../src/assets/s26-8.webm';
+// DHYAN DE BHAI: Yahan se maine saare video imports HATA DIYE HAIN!
+// Kyunki public folder ki files ko import nahi karte, unhe seedha use karte hain.
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -21,7 +14,7 @@ const Home = () => {
   const HeroSlides = [
     {
       id: 1,
-      videoSrc: video1,
+      videoSrc: "/S26.webm", // Seedha '/' laga kar file ka naam likha hai
       title: "Galaxy S26 Ultra",
       subtitle: "Galaxy AI is here.",
       buttonText: "Buy Now",
@@ -29,7 +22,7 @@ const Home = () => {
     },
     {
       id: 2,
-      videoSrc: video7, 
+      videoSrc: "/s26-7.webm", 
       title: "Super Steady Video",
       subtitle: "Even on the go.",
       buttonText: "Learn More",
@@ -37,7 +30,7 @@ const Home = () => {
     },
     {
       id: 3,
-      videoSrc: video8, 
+      videoSrc: "/s26-8.webm", 
       // Fallback add kiya taaki blank na rahe
       // title: "Play longer",
       // subtitle: "Stay cooler.",
@@ -46,7 +39,7 @@ const Home = () => {
     },
     {
       id: 4,
-      videoSrc: video2, 
+      videoSrc: "/s26-2.webm", 
       title: "Design",
       subtitle: "MEET YOUR NEW AI PHONE.",
       buttonText: "Learn More",
@@ -54,7 +47,7 @@ const Home = () => {
     },
     {
       id: 5,
-      videoSrc: video6, 
+      videoSrc: "/s26-6.webm", 
       title: "Play longer",
       subtitle: "Stay cooler.",
       buttonText: "Learn More",
@@ -62,7 +55,7 @@ const Home = () => {
     },
     {
       id: 6,
-      videoSrc: video3, 
+      videoSrc: "/s26-3.webm", 
       title: "Performance",
       subtitle: "Galaxy Ecosystem.",
       buttonText: "Explore",
@@ -70,7 +63,7 @@ const Home = () => {
     },
     {
       id: 7,
-      videoSrc: video4, 
+      videoSrc: "/s26-4.webm", 
       title: "Nightography Video",
       subtitle: "Connected living.",
       buttonText: "Explore",
@@ -78,7 +71,7 @@ const Home = () => {
     },
     {
       id: 8,
-      videoSrc: video5, 
+      videoSrc: "/s26-5.webm", 
       title: "Photo Assist",
       subtitle: "Connected living.",
       buttonText: "Explore",
@@ -104,11 +97,9 @@ const Home = () => {
       {/* ======================================= */}
       {/* ADVANCED MULTI-VIDEO HERO SLIDER        */}
       {/* ======================================= */}
-      {/* NAYA: mt-[76px] lagaya taaki navbar video ko hide na kare */}
       <section className="relative w-full h-[75vh] md:h-[85vh] flex items-center justify-center md:justify-end overflow-hidden px-6 md:px-24 mt-[76px]">
         
         {/* Background Video */}
-        {/* NAYA: src directly video tag pe lagaya React mounting errors se bachne ke liye */}
         <video 
           key={currentSlide} 
           src={HeroSlides[currentSlide].videoSrc}
@@ -119,10 +110,10 @@ const Home = () => {
           className="absolute inset-0 w-full h-full object-cover z-0 opacity-90 dark:opacity-80 transition-opacity duration-1000"
         />
 
-        {/* NAYA: Premium Gradient Overlay (Left to Right) */}
+        {/* Premium Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 md:from-transparent via-black/20 to-black/70 z-10 transition-colors duration-500"></div>
 
-        {/* Hero Content (Center on mobile, Right Aligned on Desktop) */}
+        {/* Hero Content */}
         <div className="relative z-20 flex flex-col items-center md:items-end text-center md:text-right w-full md:max-w-2xl mt-auto pb-20 md:pb-0 md:mt-10">
           
           {HeroSlides[currentSlide].title && (
@@ -171,7 +162,6 @@ const Home = () => {
       {/* ======================================= */}
       {/* FEATURED PRODUCTS SECTION               */}
       {/* ======================================= */}
-      {/* NAYA: Apna reusable ProductGrid use kiya! Code ekdum chota aur clean ho gaya. */}
       <div className="pb-16">
         <ProductGrid Title="Featured Products" Products={FeaturedProducts} />
       </div>
