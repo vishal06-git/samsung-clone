@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Navbar from './Components/Layout/Navbar/Index'; 
 import Footer from './Components/Layout/Footer';
 
-// Saare Pages import kar liye
+// Pages
 import Home from './Pages/Home';
 import ProductDetail from './Pages/ProductDetail';
 import Cart from './Pages/Cart';
@@ -18,12 +18,17 @@ import OrderSuccess from './Pages/OrderSuccess';
 import TrackOrder from './Pages/TrackOrder';
 import Profile from './Pages/Profile';
 import Wishlist from './Pages/Wishlist';
-import HeroBanner from './Components/Ui/HeroBanner';
-// Saare Contexts
+import Appliances from './Pages/Appliances';
+import TvAudio from './Pages/TvAudio';
+import Computing from './Pages/Computing';
+
+
+// Contexts
 import { CartProvider } from './Context/CartContext'; 
 import { AuthProvider } from './Context/AuthContext'; 
 import { WishlistProvider } from './Context/WishlistContext';
 import { ThemeProvider } from './Context/ThemeContext';
+
 
 function App() {
   return (
@@ -34,16 +39,29 @@ function App() {
             <Router>
               <div className="min-h-screen flex flex-col font-sans bg-white text-black dark:bg-[#0f0f0f] dark:text-white transition-colors duration-300">
                 
+                {/* NAYA: Premium Toast Styling */}
                 <Toaster 
                   position="bottom-center"
                   toastOptions={{
-                    style: { background: '#333', color: '#fff', borderRadius: '100px', padding: '12px 24px', fontWeight: 'bold' }
+                    style: { 
+                      background: '#1a1a1a', 
+                      color: '#fff', 
+                      borderRadius: '100px', 
+                      padding: '16px 24px', 
+                      fontWeight: '600',
+                      fontSize: '14px',
+                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    },
+                    success: {
+                      iconTheme: { primary: '#fff', secondary: '#000' }
+                    }
                   }} 
                 />
 
                 <Navbar />
                 
-                <main className="flex-grow pt-16">
+                {/* NAYA FIX: Removed pt-16. Individual pages now handle their own Navbar overlapping for a true premium full-bleed effect. */}
+                <main className="flex-grow flex flex-col">
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/product/:id" element={<ProductDetail />} />
@@ -53,14 +71,16 @@ function App() {
                     <Route path="/search" element={<Search />} />
                     <Route path="/mobile" element={<Mobile />} />
                     <Route path="/shop" element={<Category title="Shop All" />} />
-                    <Route path="/tv" element={<Category title="TV & Audio" />} />
-                    <Route path="/appliances" element={<Category title="Home Appliances" />} />
-                    <Route path="/computing" element={<Category title="Computing" />} />
+                    
+                    
+                    
                     <Route path="/success/:orderId" element={<OrderSuccess />} />
                     <Route path="/track" element={<TrackOrder />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/wishlist" element={<Wishlist />} />
-                    
+                    <Route path="/appliances" element={<Appliances />} />
+                    <Route path="/tv" element={<TvAudio />} />
+                    <Route path="/computing" element={<Computing />} />
                   </Routes>
                 </main>
 

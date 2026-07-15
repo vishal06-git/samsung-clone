@@ -1,45 +1,47 @@
 import React from 'react';
-// 1. Yahan apni video ka EXACT naam likhna jo tumne assets folder me save ki hai
+// Yahan apni video ka EXACT naam likhna jo tumne assets folder me save ki hai
 import HeroVideo from '../../assets/s26.WEBM'; 
 
 const HeroBanner = () => {
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] bg-[#f4f4f4] overflow-hidden flex items-center justify-center">
+    // NAYA: Height badha kar h-[85vh] ki taaki cinematic look aaye. 
+    // transition-colors lagaya taaki theme change smooth ho.
+    <div className="relative w-full h-[75vh] md:h-[85vh] bg-white dark:bg-[#0f0f0f] overflow-hidden flex items-center justify-center transition-colors duration-300 mt-16 md:mt-[76px]">
       
       {/* Background Video Section */}
       <div className="absolute inset-0 z-0 flex justify-center items-center">
-         {/* 2. img ki jagah video tag use kiya hai */}
          <video 
             src={HeroVideo}
             autoPlay
             loop
             muted 
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-90 dark:opacity-75 transition-opacity duration-500"
          />
          
-         {/* Optional: Agar tumhari video dark hai, toh ye black overlay text ko padhne me madad karega */}
-         {/* <div className="absolute inset-0 bg-black/20 z-10"></div> */}
+         {/* NAYA: Premium Gradient Overlay 
+             Left-to-Right gradient taaki left side (video) clear rahe aur right side (text) legible rahe. */}
+         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-black/60 dark:to-black/80 z-10 transition-colors duration-500"></div>
       </div>
 
-      {/* UPDATE: Text Content (z-20 kiya taaki video ke upar dikhe) */}
-      {/* Changes: md:text-left -> md:text-right | md:left-[10%] -> md:right-[10%] | md:items-start -> md:items-end */}
-      <div className="relative z-20 text-center px-4 mt-[-100px] md:mt-0 md:text-right md:absolute md:right-[10%] lg:right-[5%] flex flex-col items-center md:items-end">
+      {/* Text Content (Right aligned for premium ad feel) */}
+      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 flex flex-col items-center md:items-end text-center md:text-right">
         
-        {/* Agar video dark hai, toh 'text-black' ko 'text-white' kar dena */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-black mb-4 tracking-tighter drop-shadow-md">
+        {/* NAYA: Typography upgrade ki hai. Text size aur weight badhaya. */}
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 tracking-tighter drop-shadow-2xl animate-fade-in-up">
           Galaxy S26 Ultra
         </h1>
-        <p className="text-lg text-black mb-8 max-w-sm font-medium drop-shadow-md">
-          The next era of Galaxy is here. Experience the ultimate power, advanced AI, and the most immersive display yet.
+        
+        <p className="text-lg md:text-2xl text-gray-200 mb-10 max-w-lg font-medium drop-shadow-lg animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          Galaxy AI is here. Experience the ultimate power and the most immersive display yet.
         </p>
         
         {/* Call to Action Buttons */}
-        <div className="flex space-x-4">
-          <button className="bg-black text-white px-8 py-3 rounded-full font-bold hover:bg-gray-800 transition-colors shadow-lg">
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <button className="bg-white text-black px-10 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg hover:scale-105 hover:bg-gray-100 transition-all duration-300 shadow-2xl">
             Buy Now
           </button>
-          <button className="bg-white/80 backdrop-blur-sm border border-black text-black px-8 py-3 rounded-full font-bold hover:bg-black hover:text-white transition-colors shadow-lg">
+          <button className="bg-transparent border-2 border-white text-white px-10 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg hover:bg-white hover:text-black transition-all duration-300 shadow-lg">
             Learn More
           </button>
         </div>

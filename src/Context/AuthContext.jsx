@@ -1,32 +1,45 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [User, setUser] = useState(null);
+  // NAYA: Lazy initialization - Page load hone par pehle localStorage check karega
+  const [User, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('samsung_user_session');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-  // Existing Login Function
+  // Login Function with LocalStorage
   const Login = (email, password) => {
-    // Real app me yaha pehle check hota ki email database me hai ya nahi
-    setUser({ Name: "Vishal", Email: email });
-    toast.success("Logged in successfully!");
+    // Real app me yaha API call hoti
+    const userData = { Name: "Vishal Gawhade", Email: email };
+    
+    setUser(userData);
+    localStorage.setItem('samsung_user_session', JSON.stringify(userData)); // Session save kar liya
+    
+    // Premium Samsung-style toast message
+    toast.success("Signed in to your Samsung Account.");
   };
 
-  // NEW: Register Function
+  // Register Function with LocalStorage
   const Register = (name, email, password) => {
-    // Naya user create karke seedha login state me daal diya
-    setUser({ Name: name, Email: email });
-    toast.success(`Welcome to Samsung, ${name}! Account created.`);
+    const userData = { Name: name, Email: email };
+    
+    setUser(userData);
+    localStorage.setItem('samsung_user_session', JSON.stringify(userData)); // Session save kar liya
+    
+    toast.success(`Welcome to Samsung, ${name}!`);
   };
 
+  // Logout Function
   const Logout = () => {
     setUser(null);
-    toast.success("Logged out successfully!");
+    localStorage.removeItem('samsung_user_session'); // Session delete kar diya
+    toast.success("Signed out successfully.");
   };
 
   return (
-    // Provider me Register function bhi pass kar diya
     <AuthContext.Provider value={{ User, Login, Register, Logout }}>
       {children}
     </AuthContext.Provider>
