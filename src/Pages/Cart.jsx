@@ -20,14 +20,22 @@ const Cart = () => {
 
   // Promo Code Handler
   const handleApplyPromo = () => {
-    if (promoCode.toUpperCase() === 'SAMSUNG20') {
-      setDiscount(20);
-      setPromoError('');
-    } else {
-      setDiscount(0);
-      setPromoError('Invalid Promo Code');
-    }
-  };
+  const code = promoCode.toUpperCase().trim();
+
+  if (code === 'SAMSUNG20') {
+    setDiscount(20); // 20% discount
+    setPromoError('');
+  } else if (code === 'SAMSUNG50') {
+    setDiscount(50); // 50% discount
+    setPromoError('');
+  } else if (code === 'NEWUSER10') {
+    setDiscount(10); // 10% discount
+    setPromoError('');
+  } else {
+    setDiscount(0);
+    setPromoError('Invalid Promo Code');
+  }
+};
 
   // ---------------- EMPTY CART UI ----------------
   if (CartItems.length === 0) {
@@ -114,8 +122,12 @@ const Cart = () => {
                   </button>
                 </div>
                 {promoError && <p className="text-red-500 text-xs mt-2 ml-4 font-medium">{promoError}</p>}
-                {discount > 0 && <p className="text-green-500 text-xs mt-2 ml-4 font-bold">20% Discount Applied!</p>}
-              </div>
+                {discount > 0 && (
+                    <p className="text-green-500 text-xs mt-2 ml-4 font-bold">
+                      {discount}% Discount Applied!
+                    </p>
+                  )}
+                </div>
 
               {/* Price Breakdown */}
               <div className="flex flex-col gap-4 text-sm font-medium text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-6 mb-6">

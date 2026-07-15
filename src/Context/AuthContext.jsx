@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   // Login Function with LocalStorage
   const Login = (email, password) => {
     // Real app me yaha API call hoti
-    const userData = { Name: "Vishal Gawhade", Email: email };
+    const userData = { Name: "xyz", Email: email };
     
     setUser(userData);
     localStorage.setItem('samsung_user_session', JSON.stringify(userData)); // Session save kar liya

@@ -66,7 +66,7 @@ const Login = () => {
                 onChange={(e) => setName(e.target.value)}
                 // NAYA: Inputs with dark mode borders and premium focus ring
                 className="w-full bg-[#f8f8f8] dark:bg-[#1a1a1a] border border-transparent dark:border-gray-800 rounded-xl p-4 text-black dark:text-white focus:bg-white dark:focus:bg-[#1a1a1a] focus:outline-none focus:border-black dark:focus:border-white focus:ring-1 focus:ring-black dark:focus:ring-white transition-all placeholder-gray-400 dark:placeholder-gray-600 font-medium"
-                placeholder="Vishal Gawhade"
+                placeholder="xyz"
                 required
               />
             </div>

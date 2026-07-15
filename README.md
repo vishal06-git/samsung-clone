@@ -49,6 +49,6 @@ Vishal Gawhade
 GitHub: vishal06-git
 
 
-LinkedIn: Vishal Gawhade
+LinkedIn: [Vishal Gawhade](https://in.linkedin.com/in/vishal-gawhade)
 
 Disclaimer: This is a portfolio project created purely for educational and demonstration purposes. It is not affiliated with, maintained by, or endorsed by Samsung.
