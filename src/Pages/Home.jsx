@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 import ProductGrid from '../Components/Products/ProductGrid'; 
 
 // Apni saari 8 downloaded videos yahan import ki hain
-import video1 from '../../src/assets/s26.WEBM';
-import video2 from '../../src/assets/s26-2.WEBM';
-import video3 from '../../src/assets/s26-3.WEBM';
-import video4 from '../../src/assets/s26-4.WEBM';
-import video5 from '../../src/assets/s26-5.WEBM';
-import video6 from '../../src/assets/s26-6.WEBM';
-import video7 from '../../src/assets/s26-7.WEBM';
-import video8 from '../../src/assets/s26-8.WEBM';
+import video1 from '../../src/assets/s26.webm';
+import video2 from '../../src/assets/s26-2.webm';
+import video3 from '../../src/assets/s26-3.webm';
+import video4 from '../../src/assets/s26-4.webm';
+import video5 from '../../src/assets/s26-5.webm';
+import video6 from '../../src/assets/s26-6.webm';
+import video7 from '../../src/assets/s26-7.webm';
+import video8 from '../../src/assets/s26-8.webm';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
